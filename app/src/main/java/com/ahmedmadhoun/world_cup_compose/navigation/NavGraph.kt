@@ -111,7 +111,7 @@ fun SetupNavGraph(
         ) { entry ->
             WinnerScreen(
                 navController = navController,
-                winner = entry.arguments?.getString("winner")
+                winnerArgument = entry.arguments?.getString("winner")
             )
         }
 

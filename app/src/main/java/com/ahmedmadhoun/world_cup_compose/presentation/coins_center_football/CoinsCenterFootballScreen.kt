@@ -31,7 +31,8 @@ fun CoinsCenterFootballScreen(
                 MainAppBar(
                     screenTitle = "Coins Center",
                     showBackButton = true,
-                    showNotificationIcon = true
+                    showNotificationIcon = true,
+                    navController=navController,
                 )
             }
         ) {

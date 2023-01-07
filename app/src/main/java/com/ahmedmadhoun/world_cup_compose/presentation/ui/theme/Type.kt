@@ -33,7 +33,7 @@ val Typography = Typography(
     h1 = TextStyle(
         fontFamily = Intro,
         fontWeight = FontWeight.Normal,
-        fontSize = 13.sp
+        fontSize = 22.sp
     ),
 
     h2 = TextStyle(

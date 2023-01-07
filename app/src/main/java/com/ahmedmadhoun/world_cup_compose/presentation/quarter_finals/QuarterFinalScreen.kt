@@ -53,7 +53,10 @@ fun QuarterFinalsScreen(
         topBar = {
             MainAppBar(
                 screenTitle = "QUARTER FINALS",
-                showBackButton = true
+                showBackButton = true,
+                navController=navController,
+                titleDown = true,
+                progressValue = 7.5f
             )
         }) {
         EleminationRounds(

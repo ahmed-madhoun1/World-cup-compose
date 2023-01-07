@@ -1,20 +1,26 @@
 package com.ahmedmadhoun.world_cup_compose.presentation.group_stage
 
 import android.util.Log
+import android.widget.Space
 import android.widget.Toast
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material.icons.filled.Redo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -27,10 +33,9 @@ import com.ahmedmadhoun.world_cup_compose.data.local.NationalTeam
 import com.ahmedmadhoun.world_cup_compose.data.local.ListArgument
 import com.ahmedmadhoun.world_cup_compose.navigation.Screen
 import com.ahmedmadhoun.world_cup_compose.presentation.components.MainAppBar
+import com.ahmedmadhoun.world_cup_compose.presentation.components.MainCheckbox
 import com.ahmedmadhoun.world_cup_compose.presentation.components.PrimaryButton
-import com.ahmedmadhoun.world_cup_compose.presentation.ui.theme.lightGreyColor
-import com.ahmedmadhoun.world_cup_compose.presentation.ui.theme.primaryColor
-import com.ahmedmadhoun.world_cup_compose.presentation.ui.theme.primaryTextColor
+import com.ahmedmadhoun.world_cup_compose.presentation.ui.theme.*
 import com.ahmedmadhoun.world_cup_compose.util.getGroupName
 import com.ahmedmadhoun.world_cup_compose.util.rememberWindowInfo
 import com.google.gson.Gson
@@ -46,18 +51,27 @@ fun GroupStageScreen(
 
     val context = LocalContext.current
 
+    val state = viewModel.state
+
+    if (state.screenError.isNotEmpty()) {
+        Toast.makeText(context, state.screenError, Toast.LENGTH_SHORT).show()
+    }
+
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
             MainAppBar(
                 screenTitle = "GROUP STAGE",
-                showBackButton = true
+                showBackButton = true,
+                navController = navController,
+                titleDown = true,
+                progressValue = 3f
             )
         }) {
         Box {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 20.dp)
+                    .wrapContentSize()
+                    .padding(start = 20.dp, end = 20.dp)
                     .verticalScroll(scrollState)
             ) {
                 viewModel.list.groupBy {
@@ -87,11 +101,14 @@ fun GroupStageScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(60.dp)
-                                    .padding(start = 15.dp),
+                                    .padding(horizontal = 15.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
+                                Image(modifier=Modifier.size(35.dp).weight(1.5f), painter = painterResource(id = item.image), contentDescription =null)
+                                Spacer(Modifier.size(10.dp))
                                 Text(
+                                    modifier=Modifier.weight(8f),
                                     text = item.name,
                                     color = primaryTextColor,
                                     style = MaterialTheme.typography.subtitle1.copy(
@@ -100,14 +117,34 @@ fun GroupStageScreen(
                                         fontSize = 18.sp
                                     ),
                                 )
+                                if(item.isFirstInGroup){
+                                    Text(
+                                        modifier=Modifier,
+                                        text = "1",
+                                        color = primaryTextColor,
+                                        style = MaterialTheme.typography.subtitle1.copy(
+                                            fontWeight = FontWeight.ExtraBold,
+                                            textAlign = TextAlign.Start,
+                                            fontSize = 18.sp
+                                        ),
+                                    )
+                                }
+                                if(!item.isFirstInGroup && item.isQualified){
+                                    Text(
+                                        modifier=Modifier,
+                                        text = "2",
+                                        color = primaryTextColor,
+                                        style = MaterialTheme.typography.subtitle1.copy(
+                                            fontWeight = FontWeight.ExtraBold,
+                                            textAlign = TextAlign.Start,
+                                            fontSize = 18.sp
+                                        ),
+                                    )
+                                }
                                 val isChecked = remember { mutableStateOf(false) }
-                                Checkbox(
-                                    enabled = true,
-                                    colors = CheckboxDefaults.colors(
-                                        checkedColor = primaryColor,
-                                        uncheckedColor = primaryTextColor,
-                                    ),
-                                    checked = isChecked.value, onCheckedChange = { value ->
+                                MainCheckbox(
+                                    checked = isChecked.value,
+                                    onCheckedChange = { value ->
                                         isChecked.value = value
                                         if (viewModel.groupStageList.filter { fil -> fil.group == item.group && fil.isQualified }.size >= 2 && isChecked.value) {
                                             Toast.makeText(context, "You can select just tow teams", Toast.LENGTH_SHORT).show()
@@ -116,7 +153,8 @@ fun GroupStageScreen(
                                             viewModel.groupStageList.forEachIndexed { index, nationalTeam ->
                                                 val nationalTeamItem = viewModel.groupStageList[index]
                                                 if (nationalTeam.id == item.id) {
-                                                    nationalTeamItem.isQualified = !nationalTeamItem.isQualified
+                                                    nationalTeamItem.isQualified =
+                                                        !nationalTeamItem.isQualified
                                                     if (!isChecked.value && !nationalTeamItem.isQualified && nationalTeamItem.isFirstInGroup) {
                                                         nationalTeamItem.isFirstInGroup = false
                                                         viewModel.groupStageList.forEach { team ->
@@ -125,12 +163,9 @@ fun GroupStageScreen(
                                                                 Toast.makeText(context, "${team.name} Became the first in group", Toast.LENGTH_SHORT).show()
                                                             }
                                                         }
-                                                    } else if (viewModel.groupStageList.any { team -> team.group == item.group && team.isQualified && team.isFirstInGroup }) {
-                                                        Toast.makeText(context, "${nationalTeamItem.name} is the second in group", Toast.LENGTH_SHORT).show()
                                                     } else {
-                                                        if (nationalTeamItem.isQualified) {
+                                                        if (!viewModel.groupStageList.any { team -> team.group == item.group && team.isQualified && team.isFirstInGroup}) {
                                                             nationalTeamItem.isFirstInGroup = true
-                                                            Toast.makeText(context, "${nationalTeamItem.name} is the First in group", Toast.LENGTH_SHORT).show()
                                                         }
                                                     }
                                                 }
@@ -142,24 +177,36 @@ fun GroupStageScreen(
                         }
                     }
                 }
+                Spacer(Modifier.size(150.dp))
             }
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(50.dp)
-                    .clip(RoundedCornerShape(20.dp))
+                    .shadow(
+                        elevation = 20.dp,
+                        RoundedCornerShape(topStart = 35.dp, topEnd = 35.dp),
+                    )
                     .align(Alignment.BottomCenter)
-                    .background(color = lightGreyColor)
+                    .fillMaxWidth()
+                    .height(110.dp)
+                    .background(color = whiteColor)
             ) {
-                PrimaryButton(
-                    modifier = Modifier.wrapContentSize(),
-                    text = R.string.next,
-                    buttonColor = primaryColor,
-                    isLoading = false,
-                    isEnabled = true
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(20.dp)
+                        .align(Alignment.Center)
                 ) {
-                    viewModel.onEvent(GroupStageEvent.OnSubmit(navController))
+                    PrimaryButton(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .align(Alignment.Center),
+                        text = R.string.next,
+                        buttonColor = primaryColor,
+                        isLoading = false,
+                        isEnabled = true
+                    ) {
+                        viewModel.onEvent(GroupStageEvent.OnSubmit(navController))
+                    }
                 }
             }
         }

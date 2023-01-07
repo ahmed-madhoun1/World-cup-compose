@@ -1,6 +1,7 @@
 package com.ahmedmadhoun.world_cup_compose.presentation.final
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -13,7 +14,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -27,11 +30,13 @@ import com.ahmedmadhoun.world_cup_compose.data.local.Match
 import com.ahmedmadhoun.world_cup_compose.data.local.NationalTeam
 import com.ahmedmadhoun.world_cup_compose.navigation.Screen
 import com.ahmedmadhoun.world_cup_compose.presentation.components.MainAppBar
+import com.ahmedmadhoun.world_cup_compose.presentation.components.MainCheckbox
 import com.ahmedmadhoun.world_cup_compose.presentation.components.PrimaryButton
 import com.ahmedmadhoun.world_cup_compose.presentation.semi_finals.SemiFinalViewModel
 import com.ahmedmadhoun.world_cup_compose.presentation.ui.theme.lightGreyColor
 import com.ahmedmadhoun.world_cup_compose.presentation.ui.theme.primaryColor
 import com.ahmedmadhoun.world_cup_compose.presentation.ui.theme.primaryTextColor
+import com.ahmedmadhoun.world_cup_compose.presentation.ui.theme.whiteColor
 import com.google.gson.Gson
 
 @Composable
@@ -57,7 +62,10 @@ fun FinalsScreen(
         topBar = {
             MainAppBar(
                 screenTitle = "FINALS",
-                showBackButton = true
+                showBackButton = true,
+                navController = navController,
+                titleDown = true,
+                progressValue = 10f
             )
         }) {
         Box {
@@ -80,11 +88,14 @@ fun FinalsScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(60.dp)
-                                .padding(start = 15.dp),
+                                .padding(horizontal = 15.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            Image(modifier=Modifier.size(35.dp).weight(1.5f), painter = painterResource(id = teams.team1.image), contentDescription =null)
+                            Spacer(Modifier.size(10.dp))
                             Text(
+                                modifier=Modifier.weight(8f),
                                 text = teams.team1.name,
                                 color = primaryTextColor,
                                 style = MaterialTheme.typography.subtitle1.copy(
@@ -94,12 +105,7 @@ fun FinalsScreen(
                                 ),
                             )
                             val isChecked = remember { mutableStateOf(false) }
-                            Checkbox(
-                                enabled = true,
-                                colors = CheckboxDefaults.colors(
-                                    checkedColor = primaryColor,
-                                    uncheckedColor = primaryTextColor,
-                                ),
+                            MainCheckbox(
                                 checked = isChecked.value, onCheckedChange = { value ->
                                     isChecked.value = value
 //                                    checkBoxClicked(isChecked.value, finalList)
@@ -120,11 +126,14 @@ fun FinalsScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(60.dp)
-                                .padding(start = 15.dp),
+                                .padding(horizontal = 15.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            Image(modifier=Modifier.size(35.dp).weight(1.5f), painter = painterResource(id = teams.team2.image), contentDescription =null)
+                            Spacer(Modifier.size(10.dp))
                             Text(
+                                modifier=Modifier.weight(8f),
                                 text = teams.team2.name,
                                 color = primaryTextColor,
                                 style = MaterialTheme.typography.subtitle1.copy(
@@ -134,12 +143,7 @@ fun FinalsScreen(
                                 ),
                             )
                             val isChecked = remember { mutableStateOf(false) }
-                            Checkbox(
-                                enabled = true,
-                                colors = CheckboxDefaults.colors(
-                                    checkedColor = primaryColor,
-                                    uncheckedColor = primaryTextColor,
-                                ),
+                            MainCheckbox(
                                 checked = isChecked.value, onCheckedChange = { value ->
                                     isChecked.value = value
 //                                    checkBoxClicked(isChecked.value, finalList)
@@ -182,11 +186,14 @@ fun FinalsScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(60.dp)
-                                .padding(start = 15.dp),
+                                .padding(horizontal = 15.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            Image(modifier=Modifier.size(35.dp).weight(1.5f), painter = painterResource(id = teams.team1.image), contentDescription =null)
+                            Spacer(Modifier.size(10.dp))
                             Text(
+                                modifier=Modifier.weight(8f),
                                 text = teams.team1.name,
                                 color = primaryTextColor,
                                 style = MaterialTheme.typography.subtitle1.copy(
@@ -196,12 +203,7 @@ fun FinalsScreen(
                                 ),
                             )
                             val isChecked = remember { mutableStateOf(false) }
-                            Checkbox(
-                                enabled = true,
-                                colors = CheckboxDefaults.colors(
-                                    checkedColor = primaryColor,
-                                    uncheckedColor = primaryTextColor,
-                                ),
+                            MainCheckbox(
                                 checked = isChecked.value, onCheckedChange = { value ->
                                     isChecked.value = value
 //                                    checkBoxClicked(isChecked.value, finalList)
@@ -222,11 +224,14 @@ fun FinalsScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(60.dp)
-                                .padding(start = 15.dp),
+                                .padding(horizontal = 15.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            Image(modifier=Modifier.size(35.dp).weight(1.5f), painter = painterResource(id = teams.team2.image), contentDescription =null)
+                            Spacer(Modifier.size(10.dp))
                             Text(
+                                modifier=Modifier.weight(8f),
                                 text = teams.team2.name,
                                 color = primaryTextColor,
                                 style = MaterialTheme.typography.subtitle1.copy(
@@ -236,12 +241,7 @@ fun FinalsScreen(
                                 ),
                             )
                             val isChecked = remember { mutableStateOf(false) }
-                            Checkbox(
-                                enabled = true,
-                                colors = CheckboxDefaults.colors(
-                                    checkedColor = primaryColor,
-                                    uncheckedColor = primaryTextColor,
-                                ),
+                            MainCheckbox(
                                 checked = isChecked.value, onCheckedChange = { value ->
                                     isChecked.value = value
 //                                    checkBoxClicked(isChecked.value, finalList)
@@ -260,40 +260,49 @@ fun FinalsScreen(
                         }
                     }
                 }
+                Spacer(Modifier.size(150.dp))
             }
-            Spacer(Modifier.size(20.dp))
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(50.dp)
-                    .clip(RoundedCornerShape(20.dp))
-                    .align(Alignment.BottomCenter)
-                    .background(color = lightGreyColor)
-            ) {
-                PrimaryButton(
-                    modifier = Modifier.wrapContentSize(),
-                    text = R.string.next,
-                    buttonColor = primaryColor,
-                    isLoading = false,
-                    isEnabled = true
-                ) {
-
-                    val firstInGroupList =
-                        finalList.filter { it.team1.isQualified || it.team2.isQualified }
-
-                    val winner: NationalTeam = if (finalList[0].team1.isQualified) {
-                        finalList[0].team1
-                    } else {
-                        finalList[0].team2
-                    }
-
-                    navController.navigate(
-                        Screen.WinnerScreen.withArgs(
-                            Gson().toJson(winner)
-                        )
+                    .shadow(
+                        elevation = 20.dp,
+                        RoundedCornerShape(topStart = 35.dp, topEnd = 35.dp),
                     )
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .height(110.dp)
+                    .background(color = whiteColor)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(20.dp)
+                        .align(Alignment.Center)
+                ) {
+                    PrimaryButton(
+                        modifier = Modifier.wrapContentSize().align(Alignment.Center),
+                        text = R.string.next,
+                        buttonColor = primaryColor,
+                        isLoading = false,
+                        isEnabled = true
+                    ) {
 
+                        val firstInGroupList =
+                            finalList.filter { it.team1.isQualified || it.team2.isQualified }
+
+                        val winner: NationalTeam = if (finalList[0].team1.isQualified) {
+                            finalList[0].team1
+                        } else {
+                            finalList[0].team2
+                        }
+
+                        navController.navigate(
+                            Screen.WinnerScreen.withArgs(
+                                Gson().toJson(winner)
+                            )
+                        )
+
+                    }
                 }
             }
         }

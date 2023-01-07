@@ -52,7 +52,10 @@ fun RoundOf16Screen(
         topBar = {
             MainAppBar(
                 screenTitle = "ROUND OF 16",
-                showBackButton = true
+                showBackButton = true,
+                navController=navController,
+                titleDown = true,
+                progressValue = 5f
             )
         }) {
         EleminationRounds(
