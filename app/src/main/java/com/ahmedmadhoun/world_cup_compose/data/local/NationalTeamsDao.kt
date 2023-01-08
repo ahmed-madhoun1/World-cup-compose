@@ -6,24 +6,14 @@ import androidx.room.*
 @Dao
 interface NationalTeamsDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertNationalTeam(nationalTeam: NationalTeam)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertDataJson(dataJson: DataJson)
 
-    @Delete
-    suspend fun deleteNationalTeam(nationalTeam: NationalTeam)
+    @Query("SELECT * FROM data_json_list WHERE id == :listType")
+    fun observeDataJsonList(listType: Int): LiveData<DataJson>
 
-    @Query("SELECT * FROM national_teams WHERE listType == :listType")
-    fun observeAllNationalTeams(listType: Int): LiveData<List<NationalTeam>>
-
-
-    @Query("SELECT * FROM national_teams ORDER BY `group`")
-    fun observeAllNationalTeamsSortedByGroup(): LiveData<List<NationalTeam>>
-
-    @Query("SELECT * FROM national_teams WHERE `group` == :new_group")
-    fun observeNationalTeamsGroup(new_group: Int): LiveData<List<NationalTeam>>
-
-    @Query("DELETE FROM national_teams")
-    fun deleteAllNationalTeams()
+    @Query("DELETE FROM data_json_list")
+    suspend fun deleteAllDataJson()
 
 
 }

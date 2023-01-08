@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,6 +34,7 @@ import com.ahmedmadhoun.world_cup_compose.presentation.components.PrimaryButton
 import com.ahmedmadhoun.world_cup_compose.presentation.ui.theme.lightGreyColor
 import com.ahmedmadhoun.world_cup_compose.presentation.ui.theme.primaryColor
 import com.ahmedmadhoun.world_cup_compose.presentation.ui.theme.primaryTextColor
+import com.ahmedmadhoun.world_cup_compose.util.Rounds
 import com.google.gson.Gson
 
 @Composable
@@ -42,10 +44,20 @@ fun QuarterFinalsScreen(
     quarterFinalsListArgument: String?
 ) {
 
-    val quarterFinalsList = remember {
-        Gson().fromJson(quarterFinalsListArgument, ListArgument::class.java).list
+    quarterFinalsListArgument.let {
+        if (quarterFinalsListArgument != null && quarterFinalsListArgument.isNotEmpty()) {
+            val result : ListArgument? = Gson().fromJson(quarterFinalsListArgument, ListArgument::class.java)
+            if(result != null){
+                viewModel.quarterFinalsList = result.list.toMutableList()
+            }
+        }
     }
 
+    viewModel.observeData.observeAsState().value.let { dataJson ->
+        if (dataJson != null && viewModel.quarterFinalsListLocal.isEmpty()) {
+            viewModel.getQuarterFinalsData(dataJson)
+        }
+    }
     val scrollState = rememberScrollState()
     val context = LocalContext.current
 
@@ -59,10 +71,24 @@ fun QuarterFinalsScreen(
                 progressValue = 7.5f
             )
         }) {
-        EleminationRounds(
-            quarterFinalsList.toMutableList(),
-            navController,
-            Screen.SemiFinalsScreen
-        )
+        if(viewModel.quarterFinalsListLocal.isNotEmpty()){
+            EleminationRounds(
+                viewModel.quarterFinalsListLocal,
+                navController,
+                Screen.SemiFinalsScreen,
+                isReadFromLocal= true,
+                round= Rounds.QuarterFinals,
+                viewModel = viewModel
+            )
+        }else{
+            EleminationRounds(
+                viewModel.quarterFinalsList,
+                navController,
+                Screen.SemiFinalsScreen,
+                isReadFromLocal= false,
+                round= Rounds.QuarterFinals,
+                viewModel = viewModel
+            )
+        }
     }
 }

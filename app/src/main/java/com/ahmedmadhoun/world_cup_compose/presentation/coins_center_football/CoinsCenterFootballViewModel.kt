@@ -4,33 +4,33 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.ahmedmadhoun.world_cup_compose.domain.repository.NationalTeamsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CoinsCenterFootballViewModel @Inject constructor(
-//    private val repository: DriverRepository,
-//    private val getDirectionInfo: GetDirectionInfo
+    private val repository: NationalTeamsRepository,
 ) : ViewModel() {
 
 
     var state by mutableStateOf(CoinsCenterFootballState())
         internal set
 
-//
-//    private var _getLastUserBooking =
-//        MutableStateFlow<List<HomeUsersBooking.BookingList.UserBooking>>(emptyList())
-//    val getLastUserBooking: StateFlow<List<HomeUsersBooking.BookingList.UserBooking>> get() = _getLastUserBooking
-
 
     fun onEvent(event: CoinsCenterFootballEvent) {
         when (event) {
-//            is HomeEvent.GetDriverWorkStatus -> {
-//                getDriverStatus(event.token)
-//            }
-//
+            CoinsCenterFootballEvent.OnSubmit -> {
+                removeAllData()
+            }
         }
     }
 
+    private fun removeAllData() = viewModelScope.launch {
+        repository.deleteAllDataJson()
+        state = state.copy(screenSuccess = "All Data Deleted")
+    }
 
 }

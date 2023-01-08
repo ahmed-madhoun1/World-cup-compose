@@ -37,6 +37,7 @@ val Typography = Typography(
     ),
 
     h2 = TextStyle(
+        fontFamily = Intro,
         fontWeight = FontWeight.Light,
         fontSize = 18.sp
     ),

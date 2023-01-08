@@ -1,26 +1,27 @@
 package com.ahmedmadhoun.world_cup_compose.presentation.group_stage
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ahmedmadhoun.world_cup_compose.R
+import com.ahmedmadhoun.world_cup_compose.data.local.DataJson
 import com.ahmedmadhoun.world_cup_compose.data.local.ListArgument
 import com.ahmedmadhoun.world_cup_compose.data.local.Match
 import com.ahmedmadhoun.world_cup_compose.data.local.NationalTeam
+import com.ahmedmadhoun.world_cup_compose.domain.repository.NationalTeamsRepository
 import com.ahmedmadhoun.world_cup_compose.navigation.Screen
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import org.json.JSONArray
 import javax.inject.Inject
 
 @HiltViewModel
 class GroupStageViewModel @Inject constructor(
-//    private val repository: DriverRepository,
-//    private val getDirectionInfo: GetDirectionInfo
+    private val repository: NationalTeamsRepository,
 ) : ViewModel() {
-
 
     var state by mutableStateOf(GroupStageState())
         internal set
@@ -286,16 +287,35 @@ class GroupStageViewModel @Inject constructor(
 
     val groupStageList = list
 
-//
-//    private var _getLastUserBooking =
-//        MutableStateFlow<List<HomeUsersBooking.BookingList.UserBooking>>(emptyList())
-//    val getLastUserBooking: StateFlow<List<HomeUsersBooking.BookingList.UserBooking>> get() = _getLastUserBooking
+    val observeData = repository.observeDataJson(0)
 
+    val groupStageListLocal = mutableListOf<NationalTeam>()
+
+
+    fun getGroupStageData(dataJson: DataJson) {
+        val jsonList = JSONArray(Gson().fromJson(dataJson.jsonList, List::class.java))
+        for (i in 0 until jsonList.length()) {
+            groupStageListLocal.add(
+                NationalTeam(
+                    name = jsonList.getJSONObject(i).getString("name"),
+                    image = jsonList.getJSONObject(i).getInt("image"),
+                    group = jsonList.getJSONObject(i).getInt("group"),
+                    isQualified = jsonList.getJSONObject(i).getBoolean("isQualified"),
+                    isFirstInGroup = jsonList.getJSONObject(i).getBoolean("isFirstInGroup"),
+                    listType = jsonList.getJSONObject(i).getInt("listType"),
+                    id = jsonList.getJSONObject(i).getInt("id"),
+                )
+            )
+        }
+    }
 
     fun onEvent(event: GroupStageEvent) {
         when (event) {
             is GroupStageEvent.OnSubmit -> {
+
                 if (groupStageList.filter { it.isQualified }.size == 16) {
+                    insertNationalTeam(DataJson(0, Gson().toJson(groupStageList)))
+
                     val roundOf16List = mutableListOf<Match>()
 
                     val firstInGroupList =
@@ -307,20 +327,27 @@ class GroupStageViewModel @Inject constructor(
                         groupStageList.filter { it.isQualified && !it.isFirstInGroup }
                             .sortedBy { it.group }
 
-                    for (i in firstInGroupList.zip(secondInGroupList).indices  step 2){
+                    for (i in firstInGroupList.zip(secondInGroupList).indices step 2) {
                         roundOf16List.add(
                             Match(
                                 team1 = firstInGroupList[i].copy(isQualified = false, group = 0),
-                                team2 = secondInGroupList[i + 1].copy(isQualified = false, group = 0)
+                                team2 = secondInGroupList[i + 1].copy(
+                                    isQualified = false,
+                                    group = 0
+                                )
                             )
                         )
                         roundOf16List.add(
                             Match(
-                                team1 = firstInGroupList[i + 1].copy(isQualified = false, group = 1),
+                                team1 = firstInGroupList[i + 1].copy(
+                                    isQualified = false,
+                                    group = 1
+                                ),
                                 team2 = secondInGroupList[i].copy(isQualified = false, group = 1)
                             )
                         )
                     }
+
 
                     event.navController.navigate(
                         Screen.RoundOf16Screen.withArgs(
@@ -339,5 +366,8 @@ class GroupStageViewModel @Inject constructor(
         }
     }
 
+    private fun insertNationalTeam(dataJson: DataJson) = viewModelScope.launch {
+        repository.insertDataJson(dataJson)
+    }
 
 }

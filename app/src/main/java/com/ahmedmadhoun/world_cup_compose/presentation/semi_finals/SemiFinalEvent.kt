@@ -1,16 +1,14 @@
 package com.ahmedmadhoun.world_cup_compose.presentation.semi_finals
 
+import androidx.navigation.NavController
+import com.ahmedmadhoun.world_cup_compose.data.local.Match
+
 sealed class SemiFinalEvent {
-    data class GetDriverWorkStatus(val token: String) : SemiFinalEvent()
 
-    data class OnDriverWorkStatusChange(val token: String, val id: Int, val status: Boolean) :
-        SemiFinalEvent()
-
-//    data class DeleteItemFromList(
-//        val list: List<HomeUsersBooking.BookingList.UserBooking>,
-//        val index: Int
-//    ) : CoinsCenterFootballEvent()
-
-    object OnSubmit : SemiFinalEvent()
+    data class OnSubmit(
+        val navController: NavController,
+        val finalList: MutableList<Match>,
+        val thirdPlaceList: MutableList<Match>
+    ) : SemiFinalEvent()
 
 }

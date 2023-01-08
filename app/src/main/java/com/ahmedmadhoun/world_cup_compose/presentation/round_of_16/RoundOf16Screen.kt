@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -43,25 +44,51 @@ fun RoundOf16Screen(
 ) {
 
 
-    viewModel.roundOf16List = Gson().fromJson(roundOf16ListArgument, ListArgument::class.java).list.toMutableList()
+    roundOf16ListArgument.let {
+        if (roundOf16ListArgument != null && roundOf16ListArgument.isNotEmpty()) {
+            val result : ListArgument? = Gson().fromJson(roundOf16ListArgument, ListArgument::class.java)
+            if(result != null){
+                viewModel.roundOf16List = result.list.toMutableList()
+            }
+        }
+    }
+
 
     val scrollState = rememberScrollState()
     val context = LocalContext.current
+
+    viewModel.observeData.observeAsState().value.let { dataJson ->
+        if (dataJson != null && viewModel.roundOf16ListLocal.isEmpty()) {
+            viewModel.getRoundOf16Data(dataJson)
+        }
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         topBar = {
             MainAppBar(
                 screenTitle = "ROUND OF 16",
                 showBackButton = true,
-                navController=navController,
+                navController = navController,
                 titleDown = true,
                 progressValue = 5f
             )
         }) {
-        EleminationRounds(
-            viewModel.roundOf16List,
-            navController,
-            Screen.QuarterFinalsScreen
-        )
+        if(viewModel.roundOf16ListLocal.isNotEmpty()){
+            EleminationRounds(
+                viewModel.roundOf16ListLocal,
+                navController,
+                Screen.QuarterFinalsScreen,
+                isReadFromLocal= true,
+                viewModel = viewModel
+            )
+        }else{
+            EleminationRounds(
+                viewModel.roundOf16List,
+                navController,
+                Screen.QuarterFinalsScreen,
+                isReadFromLocal= false,
+                viewModel = viewModel
+            )
+        }
     }
 }

@@ -118,7 +118,7 @@ fun WinnerScreen(
                         isLoading = false,
                         isEnabled = true
                     ) {
-                        // save data to room
+                        navController.navigate(Screen.CoinsCenterFootballScreen.route)
                     }
                 }
             }

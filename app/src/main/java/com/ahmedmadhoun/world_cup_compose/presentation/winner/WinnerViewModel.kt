@@ -4,33 +4,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.ahmedmadhoun.world_cup_compose.data.local.DataJson
+import com.ahmedmadhoun.world_cup_compose.data.local.Match
+import com.ahmedmadhoun.world_cup_compose.data.local.NationalTeam
+import com.ahmedmadhoun.world_cup_compose.domain.repository.NationalTeamsRepository
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.json.JSONArray
 import javax.inject.Inject
 
 @HiltViewModel
 class WinnerViewModel @Inject constructor(
-//    private val repository: DriverRepository,
-//    private val getDirectionInfo: GetDirectionInfo
+    private val repository: NationalTeamsRepository,
 ) : ViewModel() {
 
 
     var state by mutableStateOf(WinnerState())
         internal set
 
-//
-//    private var _getLastUserBooking =
-//        MutableStateFlow<List<HomeUsersBooking.BookingList.UserBooking>>(emptyList())
-//    val getLastUserBooking: StateFlow<List<HomeUsersBooking.BookingList.UserBooking>> get() = _getLastUserBooking
 
-
-    fun onEvent(event: WinnerEvent) {
-        when (event) {
-//            is HomeEvent.GetDriverWorkStatus -> {
-//                getDriverStatus(event.token)
-//            }
-//
-        }
-    }
 
 
 }

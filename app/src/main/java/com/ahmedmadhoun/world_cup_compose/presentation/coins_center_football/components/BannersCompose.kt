@@ -8,19 +8,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ahmedmadhoun.world_cup_compose.R
+import com.ahmedmadhoun.world_cup_compose.presentation.coins_center_football.CoinsCenterFootballViewModel
 
 @Composable
-fun BannersCompose() =
+fun BannersCompose(viewModel: CoinsCenterFootballViewModel) =
     Row(modifier = Modifier.fillMaxWidth()) {
         BannerCompose(
             modifier = Modifier.weight(1f),
             text = "Predict and \n win!",
-            image = R.drawable.banner_left
+            image = R.drawable.banner_left,
+            viewModel=viewModel
         )
         Spacer(Modifier.size(20.dp))
         BannerCompose(
             modifier = Modifier.weight(1f),
             text = "Football 2022 \n winner",
-            image = R.drawable.banner_right
+            image = R.drawable.banner_right,
+            viewModel=viewModel
         )
     }

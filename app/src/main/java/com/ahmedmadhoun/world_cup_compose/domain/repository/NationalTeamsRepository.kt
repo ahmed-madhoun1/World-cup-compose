@@ -1,17 +1,16 @@
 package com.ahmedmadhoun.world_cup_compose.domain.repository
 
 import androidx.lifecycle.LiveData
+import com.ahmedmadhoun.world_cup_compose.data.local.DataJson
 import com.ahmedmadhoun.world_cup_compose.data.local.NationalTeam
 
 interface NationalTeamsRepository {
 
-    suspend fun insertNationalTeam(nationalTeam: NationalTeam)
+    suspend fun  insertDataJson(dataJson: DataJson)
 
-    suspend fun deleteNationalTeam(nationalTeam: NationalTeam)
+//    suspend fun deleteDataJson(dataJson: DataJson)
+//
+    suspend fun deleteAllDataJson()
 
-    suspend fun deleteAllNationalTeams()
-
-    fun observeAllNationalTeams(listType: Int): LiveData<List<NationalTeam>>
-
-
+    fun observeDataJson(listType: Int): LiveData<DataJson>
 }

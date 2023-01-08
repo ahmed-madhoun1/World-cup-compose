@@ -10,7 +10,7 @@ sealed class Screen(val route: String) {
     object FinalsScreen : Screen(route = "finals_screen")
     object WinnerScreen : Screen(route = "winner_screen")
 
-    fun withArgs(vararg args: Any): String {
+    fun withArgs(vararg args: Any?): String {
         return buildString {
             append(route)
             args.forEach { arg ->

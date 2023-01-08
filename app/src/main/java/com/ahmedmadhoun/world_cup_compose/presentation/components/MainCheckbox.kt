@@ -36,7 +36,7 @@ fun MainCheckbox(
     checkedColor: Color = primaryColor,
     uncheckedColor: Color = White,
     checkmarkColor: Color = White,
-    onCheckedChange: ((Boolean) -> Unit),
+    onCheckedChange: ((Boolean) -> Unit)? = null,
     checked: Boolean,
 ) {
 
@@ -51,7 +51,7 @@ fun MainCheckbox(
             .toggleable(
                 value = checked,
                 role = Role.Checkbox,
-                onValueChange = { onCheckedChange(!checked) }
+                onValueChange = { onCheckedChange?.invoke(!checked) }
             )
             .size(size.dp)
             .background(checkboxColor, RoundedCornerShape(8.dp)),

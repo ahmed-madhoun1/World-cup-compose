@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.ahmedmadhoun.world_cup_compose.presentation.coins_center_football.CoinsCenterFootballScreen
-import com.ahmedmadhoun.world_cup_compose.presentation.final.FinalsScreen
+import com.ahmedmadhoun.world_cup_compose.presentation.final_screen.FinalsScreen
 import com.ahmedmadhoun.world_cup_compose.presentation.group_stage.GroupStageScreen
 import com.ahmedmadhoun.world_cup_compose.presentation.quarter_finals.QuarterFinalsScreen
 import com.ahmedmadhoun.world_cup_compose.presentation.round_of_16.RoundOf16Screen
@@ -40,7 +40,7 @@ fun SetupNavGraph(
             arguments = listOf(
                 navArgument("round_of_16_list") {
                     type = NavType.StringType
-                    nullable = false
+                    nullable = true
                 }
             )
         ) { entry ->
@@ -55,7 +55,7 @@ fun SetupNavGraph(
             arguments = listOf(
                 navArgument("quarter_finals_list") {
                     type = NavType.StringType
-                    nullable = false
+                    nullable = true
                 }
             )
         ) { entry ->
@@ -70,7 +70,7 @@ fun SetupNavGraph(
             arguments = listOf(
                 navArgument("semi_finals_list") {
                     type = NavType.StringType
-                    nullable = false
+                    nullable = true
                 }
             )
         ) { entry ->
@@ -85,11 +85,11 @@ fun SetupNavGraph(
             arguments = listOf(
                 navArgument("finals_list") {
                     type = NavType.StringType
-                    nullable = false
+                    nullable = true
                 },
                 navArgument("third_place_list") {
                     type = NavType.StringType
-                    nullable = false
+                    nullable = true
                 }
             )
         ) { entry ->
@@ -105,7 +105,7 @@ fun SetupNavGraph(
             arguments = listOf(
                 navArgument("winner") {
                     type = NavType.StringType
-                    nullable = false
+                    nullable = true
                 }
             )
         ) { entry ->

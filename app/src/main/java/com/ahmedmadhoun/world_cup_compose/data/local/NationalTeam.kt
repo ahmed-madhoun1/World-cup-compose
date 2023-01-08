@@ -7,7 +7,6 @@ import kotlinx.parcelize.Parcelize
 
 
 @Parcelize
-@Entity(tableName = "national_teams")
 data class NationalTeam(
     var image: Int,
     var name: String,
